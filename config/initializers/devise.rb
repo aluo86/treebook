@@ -232,4 +232,5 @@ Devise.setup do |config|
 
   config.secret_key = '961a6960dba288233d330580f098f2bb0d8d90d46c9ec9a8ca49e0c29
 62a6df4a783715c0bf525d54fceb1efd921f7384d9ae1123c581c87e46c731c748fdb'
+
 end
