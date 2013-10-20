@@ -20,11 +20,12 @@ end
 
 group :development, :test do
 	gem 'sqlite3'
-  gem 'log_buddy'
+    gem 'log_buddy'
 end
 
 group :production do
 	gem "pg"
+	gem "thin"
 end
 
 group :assets do
