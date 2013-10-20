@@ -4,7 +4,7 @@ class StatusesController < ApplicationController
   # GET /statuses
   # GET /statuses.json
   def index
-    @statuses = Status.all
+    @statuses = Status.order('created_at desc').all
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,7 +26,8 @@ class StatusesController < ApplicationController
   # GET /statuses/new
   # GET /statuses/new.json
   def new
-    @status = Status.new
+    @status = current_user.statuses.new
+    @status.build_document
 
     respond_to do |format|
       format.html # new.html.erb
@@ -36,7 +37,7 @@ class StatusesController < ApplicationController
 
   # GET /statuses/1/edit
   def edit
-    @status = Status.find(params[:id])
+    @status = current_user.statuses.find(params[:id])
   end
 
   # POST /statuses
@@ -59,11 +60,13 @@ class StatusesController < ApplicationController
   # PUT /statuses/1.json
   def update
     @status = current_user.statuses.find(params[:id])
+    @document = @status.document
     if params[:status] && params[:status].has_key?(:user_id)
       params[:status].delete(:user_id) 
     end
     respond_to do |format|
-      if @status.update_attributes(params[:status])
+      if @status.update_attributes(params[:status]) &&
+         @document && @document.update_attributes(params[:status][:document_attributes])
         format.html { redirect_to @status, notice: 'Status was successfully updated.' }
         format.json { head :no_content }
       else
@@ -76,7 +79,7 @@ class StatusesController < ApplicationController
   # DELETE /statuses/1
   # DELETE /statuses/1.json
   def destroy
-    @status = Status.find(params[:id])
+    @status = current_user.statuses.find(params[:id])
     @status.destroy
 
     respond_to do |format|
